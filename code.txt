@@ -1,0 +1,99 @@
+using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace IZ_7 
+{ 
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string b;
+            int i = 0;
+            int num = 0;
+            List<int> Prosm = new List<int>();
+            Console.WriteLine("\n\t\t\t введите название файла с расширением .txt");
+            string writePath = @Console.ReadLine();
+            string str;
+            string word;
+            //StreamReader sread = new StreamReader(writePath);
+            //while ((b = sread.ReadLine()) != null)
+            //{
+            //    Prosm.Add(0);
+            //    Prosm[i] = Convert.ToInt32(b.Substring(b.IndexOf('#') + 1));
+            //    i++;
+            //}
+            //sread.Close();
+
+            void addQ()
+            {
+                Console.WriteLine("\n\n\t\t\t введите /помощь для отображения справки по командам");
+                word = Console.ReadLine();
+                if (word == "/помощь")
+                {
+                    Console.WriteLine("         Список команд:");
+                    Console.WriteLine("  /список \t -  Вывод всех цитат(первые 10 символов) в виде списка");
+                    Console.WriteLine("  /добавить \t -  Добавление новой цитаты");
+                    Console.WriteLine("  /посмотреть \t -  Вывод определенной цитаты и количества ее просмотров");
+
+                    addQ();
+                }
+                if (word == "/список")
+                {
+                    try
+                    {
+                        Console.WriteLine("         Список цитат:");
+                        using (StreamReader sr = new StreamReader(writePath))
+                        {
+                            Console.WriteLine(sr.ReadToEnd());
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                    addQ();
+                }
+                if (word == "/добавить")
+                {
+                    Console.WriteLine("Добавить новую цитату : ");
+                    b = Console.ReadLine();
+                    i++;
+                    StreamWriter sw = new StreamWriter(writePath, true);
+                    sw.WriteLine(i + ").\t" + b + "\t| Просмотров : #0");
+                    sw.Close();
+                    Prosm.Add(0);
+                    Console.WriteLine("Новая цитата успешно добавлена!!!!");
+                    addQ();
+                }
+                if (word == "/посмотреть")
+                {
+                    string all;
+                    Console.WriteLine("Номер просматриваемой цитаты : ");
+                    num = Convert.ToInt32(Console.ReadLine());
+                    StreamReader sr = new StreamReader(writePath);
+                    Console.Write("Просмотр цитаты:\n");
+                    str = File.ReadLines(writePath).Skip(num - 1).First();
+                    b = File.ReadLines(writePath).Skip(num - 1).First();
+                    Prosm[num - 1]++;
+                    b = b.Replace(b.Substring(b.IndexOf('#')), "#" + Convert.ToString(Prosm[num - 1]));
+                    all = sr.ReadToEnd();
+                    Console.WriteLine(File.ReadLines(writePath).Skip(num - 1).First());
+                    Console.WriteLine("\tКол-во просмотров = " + Prosm[num - 1]);
+                    sr.Close();
+                    StreamWriter sw = new StreamWriter(writePath);
+                    sw.Write(all.Replace(str, b));
+                    sw.Close();
+
+                    addQ();
+                }
+            }
+            addQ();
+
+            Console.ReadKey();
+        }
+    }
+}
